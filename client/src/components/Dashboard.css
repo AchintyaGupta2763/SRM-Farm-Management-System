@@ -1,0 +1,31 @@
+.chart-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensures responsiveness on smaller screens */
+    justify-content: space-between;
+    gap: 20px; /* Spacing between charts */
+    padding: 20px;
+  }
+  
+  .chart-box {
+    flex: 1; /* Makes charts equal width */
+    min-width: 300px; /* Ensures charts don’t get too small */
+    max-width: 48%; /* Prevents overlap */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .chart-box canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Ensure responsiveness on smaller screens */
+  @media (max-width: 768px) {
+    .chart-box {
+      max-width: 100%; /* Stack charts on smaller screens */
+    }
+  }
+  

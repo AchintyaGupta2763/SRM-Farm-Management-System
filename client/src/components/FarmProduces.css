@@ -1,0 +1,14 @@
+.farm-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  

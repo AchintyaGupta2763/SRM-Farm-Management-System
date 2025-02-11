@@ -1,0 +1,98 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+/* Container */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 2px solid #000;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.header img {
+  width: 100px; /* Adjust logo size */
+  margin-bottom: 20px;
+}
+
+/* Form Inputs Container */
+.form-inputs {
+  display: grid;
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+/* Controls Section (e.g., Fetch, Export buttons) */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.controls button {
+  flex: 1;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background-color: #45a049;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+}
+
+
+
+/* Buttons for Adding Row / Export CSV */
+.add-row-btn, .export-csv-btn {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.add-row-btn:hover, .export-csv-btn:hover {
+  background-color: #45a049;
+}
+
+/* Footer */
+.footer {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
