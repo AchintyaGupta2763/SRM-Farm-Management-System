@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./Forecast.css";
+import { useAuth } from '../context/AuthContext';
 
 const Forecast = () => {
+  const { user } = useAuth();
+  console.log(user);
   const [date, setDate] = useState("");
   const [fieldNumber, setFieldNumber] = useState("");
   const [area, setArea] = useState("");
@@ -79,6 +82,30 @@ const Forecast = () => {
     }
   };
 
+    // ✅ Handle approving a record
+    const handleApprove = async (id) => {
+      try {
+        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/approve`);
+        setRecords(records.map((record) => (record._id === id ? res.data : record)));
+        alert("Record approved successfully!");
+      } catch (error) {
+        console.error("❌ Error approving record:", error);
+        alert("Failed to approve record.");
+      }
+    };
+  
+    // ✅ Handle declining a record
+    const handleDecline = async (id) => {
+      try {
+        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/decline`);
+        setRecords(records.map((record) => (record._id === id ? res.data : record)));
+        alert("Record declined successfully!");
+      } catch (error) {
+        console.error("❌ Error declining record:", error);
+        alert("Failed to decline record.");
+      }
+    };
+
   // ✅ Export Records as CSV
   const handleExportCSV = () => {
     if (records.length === 0) {
@@ -141,7 +168,8 @@ const Forecast = () => {
             <th>Women</th>
             <th>Total</th>
             <th>Forecaster</th>
-            <th>Actions</th>
+            <th>Status</th>
+            {user && user.role === "admin" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -156,9 +184,13 @@ const Forecast = () => {
               <td>{record.women}</td>
               <td>{record.total}</td>
               <td>{record.forecaster}</td>
+              <td>{record.is_approved ? "Yes" : "No"}</td>
+              {user && user.role === "admin" && 
               <td>
+                <button className="approve-btn" onClick={() => handleApprove(record._id)}>✅ Approve</button>
+                <button className="decline-btn" onClick={() => handleDecline(record._id)}>❌ Decline</button>
                 <button className="delete-btn" onClick={() => handleDelete(record._id)}>🗑 Delete</button>
-              </td>
+              </td>}
             </tr>
           ))}
         </tbody>

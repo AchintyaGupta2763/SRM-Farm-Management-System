@@ -9,7 +9,8 @@ const ForecastSchema = new mongoose.Schema({
   men: { type: Number, required: true },
   women: { type: Number, required: true },
   total: { type: Number, required: true },
-  forecaster: { type: String, required: true }
+  forecaster: { type: String, required: true },
+  is_approved:{type:Boolean, default:false},
 });
 
 module.exports = mongoose.model("Forecast", ForecastSchema);
