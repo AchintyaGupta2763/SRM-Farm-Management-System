@@ -186,7 +186,7 @@ const Forecast = () => {
               <td>{record.forecaster}</td>
               <td>{record.is_approved ? "Yes" : "No"}</td>
               {user && user.role === "admin" && 
-              <td>
+              <td className="actions-cell">
                 <button className="approve-btn" onClick={() => handleApprove(record._id)}>✅ Approve</button>
                 <button className="decline-btn" onClick={() => handleDecline(record._id)}>❌ Decline</button>
                 <button className="delete-btn" onClick={() => handleDelete(record._id)}>🗑 Delete</button>

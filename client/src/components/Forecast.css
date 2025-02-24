@@ -72,7 +72,44 @@ th, td {
   text-align: left;
 }
 
+/* Ensure the actions cell has enough space */
+.actions-cell {
+  min-width: 108px; /* Adjust as needed */
+}
 
+/* Stack the action buttons vertically */
+.actions-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Space between buttons */
+}
+
+/* Style the action buttons */
+.actions-cell button {
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  width: 80%; /* Make buttons fill the cell width */
+  text-align: center; /* Center button text */
+}
+
+.approve-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.decline-btn {
+  background-color: brown;
+  color: white;
+  border: none;
+}
+
+.delete-btn {
+  background-color: #555;
+  color: white;
+  border: none;
+}
 
 /* Buttons for Adding Row / Export CSV */
 .add-row-btn, .export-csv-btn {
