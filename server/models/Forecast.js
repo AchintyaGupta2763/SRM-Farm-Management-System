@@ -10,6 +10,7 @@ const ForecastSchema = new mongoose.Schema({
   women: { type: Number, required: true },
   total: { type: Number, required: true },
   forecaster: { type: String, required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   is_approved:{type:Boolean, default:false},
 });
 

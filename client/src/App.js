@@ -16,6 +16,7 @@ import PurchaseRegister from './components/PurchaseRegister';
 import StockRegister from './components/StockRegister';
 import FarmToolsMovement from './components/FarmToolsMovement';
 import MovementRegister from './components/MovementRegister';
+import ApprovedCSVList from "./components/ApprovedCSVList";
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -54,7 +55,7 @@ const AppRoutes = () => {
                 <Route path="/stock-register" element={<StockRegister />} />
                 <Route path="/farm-tools" element={<FarmToolsMovement />} />
                 <Route path="/movement-register" element={<MovementRegister />} />
-
+                <Route path="/approved-csvs" element={<ApprovedCSVList />} />
                 <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
             </Routes>
         </>

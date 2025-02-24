@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Notifications from "./Notifications";
 import './Navbar.css';
 
 const Navbar = () => {
@@ -52,6 +53,7 @@ const Navbar = () => {
                     <Link to="/movement-register" className="navbar-link">
                         Movement Register
                     </Link>
+                    <Notifications />
                 </div>
                 <button onClick={handleLogout} className="navbar-button">
                     Logout

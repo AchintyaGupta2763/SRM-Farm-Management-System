@@ -14,6 +14,8 @@ const stockRegisterRoutes = require("./routes/stockRegisterRoutes")
 const farmToolsMovementRoutes = require("./routes/farmToolsMovementRoutes")
 const movementRegisterRoutes = require("./routes/movementRegisterRoutes")
 const auth = require('./routes/auth')
+const notificationRoutes = require("./routes/notifications");
+const csvRoutes = require("./routes/csv");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +41,8 @@ app.use("/api/purchase-register", purchaseRegisterRoutes);
 app.use("/api/stock-register", stockRegisterRoutes);
 app.use("/api/farm-tools", farmToolsMovementRoutes);
 app.use("/api/movement-register", movementRegisterRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/csv", csvRoutes);
 app.use("/api/auth", auth);
 
 // MongoDB Connection

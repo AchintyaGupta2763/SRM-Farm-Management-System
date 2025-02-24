@@ -4,8 +4,10 @@ import "./Forecast.css";
 import { useAuth } from '../context/AuthContext';
 
 const Forecast = () => {
-  const { user } = useAuth();
-  console.log(user);
+  const { user } = useAuth(); // Get the authenticated user from context
+  console.log(user); // Debug: Check user object
+
+  // State variables for form fields
   const [date, setDate] = useState("");
   const [fieldNumber, setFieldNumber] = useState("");
   const [area, setArea] = useState("");
@@ -16,11 +18,12 @@ const Forecast = () => {
   const [total, setTotal] = useState("");
   const [forecaster, setForecaster] = useState("");
 
+  // State variables for records and filters
   const [records, setRecords] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // ✅ Fetch records based on date filters (sorted in descending order)
+  // Fetch records based on date filters
   const fetchRecords = useCallback(async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/forecast", { 
@@ -32,44 +35,59 @@ const Forecast = () => {
     }
   }, [startDate, endDate]);
 
-
-  // ✅ Fetch records when filters change
+  // Fetch records when filters change
   useEffect(() => {
     fetchRecords();
   }, [fetchRecords]);
 
-  // ✅ Handle adding a new record
+  // Handle adding a new record
   const handleAddRecord = async () => {
+    // Validation: Check if all required fields are filled
     if (!date || !fieldNumber || !area || !crop || !operations || !men || !women || !forecaster) {
       alert("Please fill all fields before adding the record.");
       return;
     }
+
     try {
-        const newRecord = {
-            date,
-            fieldNumber,
-            area,
-            crop,
-            operations,
-            men: Number(men),
-            women: Number(women),
-            total: Number(men) + Number(women),
-            forecaster,
-        };
-        const res = await axios.post("http://localhost:5000/api/forecast/add", newRecord);
-        setRecords([res.data, ...records]); // Add new record at the top (descending order)
+      // Create new record object with user ID
+      const newRecord = {
+        date,
+        fieldNumber,
+        area,
+        crop,
+        operations,
+        men: Number(men),
+        women: Number(women),
+        total: Number(men) + Number(women),
+        forecaster,
+        user: user._id, // Add the authenticated user's ID
+      };
 
-        // Clear the input fields after adding the record
-        setDate("");setFieldNumber("");setArea("");setCrop("");setOperations("");setMen("");setWomen("");setTotal("");setForecaster("");
+      // Send POST request to add the record
+      const res = await axios.post("http://localhost:5000/api/forecast/add", newRecord);
+      
+      // Update records state with the new record
+      setRecords([res.data, ...records]);
 
-        alert("Record added successfully!");
+      // Clear the input fields after successful submission
+      setDate("");
+      setFieldNumber("");
+      setArea("");
+      setCrop("");
+      setOperations("");
+      setMen("");
+      setWomen("");
+      setTotal("");
+      setForecaster("");
+
+      alert("Record added successfully!");
     } catch (error) {
-        console.error("Error adding record", error);
-        alert("Failed to add record. Check console for errors.");
+      console.error("Error adding record", error);
+      alert("Failed to add record. Check console for errors.");
     }
-  };      
+  };
 
-  // ✅ Handle deleting a record
+  // Handle deleting a record
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
 
@@ -82,31 +100,31 @@ const Forecast = () => {
     }
   };
 
-    // ✅ Handle approving a record
-    const handleApprove = async (id) => {
-      try {
-        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/approve`);
-        setRecords(records.map((record) => (record._id === id ? res.data : record)));
-        alert("Record approved successfully!");
-      } catch (error) {
-        console.error("❌ Error approving record:", error);
-        alert("Failed to approve record.");
-      }
-    };
-  
-    // ✅ Handle declining a record
-    const handleDecline = async (id) => {
-      try {
-        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/decline`);
-        setRecords(records.map((record) => (record._id === id ? res.data : record)));
-        alert("Record declined successfully!");
-      } catch (error) {
-        console.error("❌ Error declining record:", error);
-        alert("Failed to decline record.");
-      }
-    };
+  // Handle approving a record
+  const handleApprove = async (id) => {
+    try {
+      const res = await axios.put(`http://localhost:5000/api/forecast/${id}/approve`);
+      setRecords(records.map((record) => (record._id === id ? res.data : record)));
+      alert("Record approved successfully!");
+    } catch (error) {
+      console.error("❌ Error approving record:", error);
+      alert("Failed to approve record.");
+    }
+  };
 
-  // ✅ Export Records as CSV
+  // Handle declining a record
+  const handleDecline = async (id) => {
+    try {
+      const res = await axios.put(`http://localhost:5000/api/forecast/${id}/decline`);
+      setRecords(records.map((record) => (record._id === id ? res.data : record)));
+      alert("Record declined successfully!");
+    } catch (error) {
+      console.error("❌ Error declining record:", error);
+      alert("Failed to decline record.");
+    }
+  };
+
+  // Export Records as CSV
   const handleExportCSV = () => {
     if (records.length === 0) {
       alert("No records available to export.");
@@ -131,7 +149,7 @@ const Forecast = () => {
     <div className="forecast-container">
       <h1>Forecast & Allocation</h1>
 
-      {/* ✅ Form Section */}
+      {/* Form Section */}
       <h2>Add New Record</h2>
       <div className="form-container">
         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
@@ -145,7 +163,7 @@ const Forecast = () => {
         <button onClick={handleAddRecord}>➕ Add Record</button>
       </div>
 
-      {/* ✅ Filter Section */}
+      {/* Filter Section */}
       <h2>Fetch Data</h2>
       <div className="filter-container">
         <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -154,7 +172,7 @@ const Forecast = () => {
         <button onClick={handleExportCSV}>📤 Export CSV</button>
       </div>
 
-      {/* ✅ Table Section */}
+      {/* Table Section */}
       <h2>Forecast Data</h2>
       <table>
         <thead>

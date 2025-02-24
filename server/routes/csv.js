@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Middleware to check if the user is an admin
 const isAdmin = (req, res, next) => {
-  if (req.user && req.user.role == "admin") {
+  if (req.user && req.user.role === "admin") {
     next();
   } else {
     res.status(403).json({ error: "Access denied. Admins only." });
@@ -19,48 +19,14 @@ const isAdmin = (req, res, next) => {
 router.post("/add", async (req, res) => {
   try {
     console.log("📥 Incoming Data:", req.body);
-    const {
-      date,
-      fieldNumber,
-      area,
-      crop,
-      operations,
-      men,
-      women,
-      total,
-      forecaster,
-      user
-    } = req.body;
+    const { date, fieldNumber, area, crop, operations, men, women, total, forecaster } = req.body;
 
-    if (
-      !date ||
-      !fieldNumber ||
-      !area ||
-      !crop ||
-      !operations ||
-      men === undefined ||
-      women === undefined ||
-      !total ||
-      !forecaster ||
-      !user
-    ) {
+    if (!date || !fieldNumber || !area || !crop || !operations || men === undefined || women === undefined || !total || !forecaster) {
       console.error("❌ Missing fields:", req.body);
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const newRecord = new Forecast({
-      date,
-      fieldNumber,
-      area,
-      crop,
-      operations,
-      men: Number(men),
-      women: Number(women),
-      total: Number(total),
-      forecaster,
-      user
-    });
-
+    const newRecord = new Forecast({ date, fieldNumber, area, crop, operations, men: Number(men), women: Number(women), total: Number(total), forecaster });
     await newRecord.save();
 
     // Notify all admins
@@ -89,10 +55,7 @@ router.get("/", async (req, res) => {
       query.date = { $gte: startDate, $lte: endDate };
     }
 
-    const records = await Forecast.find(query)
-      .sort({ date: -1 })
-      .populate("user", "name email");
-      
+    const records = await Forecast.find(query).sort({ date: -1 });
     console.log("📤 Sending Records:", records.length, "records found");
     res.json(records);
   } catch (error) {
@@ -105,11 +68,7 @@ router.get("/", async (req, res) => {
 router.put("/:id", isAdmin, async (req, res) => {
   try {
     console.log("🔄 Updating Record ID:", req.params.id, "with data:", req.body);
-    const updatedRecord = await Forecast.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    ).populate("user", "name email");
+    const updatedRecord = await Forecast.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
     if (!updatedRecord) {
       return res.status(404).json({ error: "Record not found" });
@@ -133,9 +92,6 @@ router.delete("/:id", isAdmin, async (req, res) => {
       return res.status(404).json({ error: "Record not found" });
     }
 
-    // Delete associated CSV if exists
-    await ApprovedCSV.deleteOne({ request: req.params.id });
-
     console.log("✅ Record deleted:", deletedRecord);
     res.json({ message: "Record deleted successfully" });
   } catch (error) {
@@ -148,11 +104,7 @@ router.delete("/:id", isAdmin, async (req, res) => {
 router.put("/:id/approve", isAdmin, async (req, res) => {
   try {
     console.log("✅ Approving Record ID:", req.params.id);
-    const approvedRecord = await Forecast.findByIdAndUpdate(
-      req.params.id,
-      { is_approved: true },
-      { new: true }
-    ).populate("user", "name email");
+    const approvedRecord = await Forecast.findByIdAndUpdate(req.params.id, { is_approved: true }, { new: true }).populate("user");
 
     if (!approvedRecord) {
       return res.status(404).json({ error: "Record not found" });
@@ -160,15 +112,10 @@ router.put("/:id/approve", isAdmin, async (req, res) => {
 
     // Generate CSV
     const csvData = `Date,Field Number,Area,Crop,Operations,Men,Women,Total,Forecaster,Status\n${
-      approvedRecord.date},${approvedRecord.fieldNumber},${approvedRecord.area},
-      ${approvedRecord.crop},${approvedRecord.operations},${approvedRecord.men},
-      ${approvedRecord.women},${approvedRecord.total},${approvedRecord.forecaster},Approved`;
+      approvedRecord.date},${approvedRecord.fieldNumber},${approvedRecord.area},${approvedRecord.crop},${approvedRecord.operations},${approvedRecord.men},${approvedRecord.women},${approvedRecord.total},${approvedRecord.forecaster},Approved`;
 
     // Save CSV
-    const approvedCSV = new ApprovedCSV({
-      request: approvedRecord._id,
-      csvData
-    });
+    const approvedCSV = new ApprovedCSV({ request: approvedRecord._id, csvData });
     await approvedCSV.save();
 
     // Notify user
@@ -178,7 +125,7 @@ router.put("/:id/approve", isAdmin, async (req, res) => {
     });
     await userNotification.save();
 
-    console.log("✅ Record approved:", approvedRecord);
+    console.log("✅ Record approved and user notified:", approvedRecord);
     res.json(approvedRecord);
   } catch (error) {
     console.error("❌ Error approving record:", error);
@@ -190,22 +137,11 @@ router.put("/:id/approve", isAdmin, async (req, res) => {
 router.put("/:id/decline", isAdmin, async (req, res) => {
   try {
     console.log("❌ Declining Record ID:", req.params.id);
-    const declinedRecord = await Forecast.findByIdAndUpdate(
-      req.params.id,
-      { is_approved: false },
-      { new: true }
-    ).populate("user", "name email");
+    const declinedRecord = await Forecast.findByIdAndUpdate(req.params.id, { is_approved: false }, { new: true });
 
     if (!declinedRecord) {
       return res.status(404).json({ error: "Record not found" });
     }
-
-    // Notify user
-    const userNotification = new Notification({
-      user: declinedRecord.user._id,
-      message: `Your request for Field ${declinedRecord.fieldNumber} was declined`
-    });
-    await userNotification.save();
 
     console.log("❌ Record declined:", declinedRecord);
     res.json(declinedRecord);
