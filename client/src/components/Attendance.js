@@ -33,7 +33,7 @@ const Attendance = () => {
         return;
       }
   
-      const res = await axios.get("http://localhost:5000/api/attendance");
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/attendance`);
   
       // ✅ Get yesterday's date in YYYY-MM-DD format
       const today = new Date();
@@ -53,7 +53,7 @@ const Attendance = () => {
 
   const fetchMembers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/members");
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/members`);
       setMembers(res.data);
     } catch (error) {
       console.error("Error fetching members", error);
@@ -85,7 +85,7 @@ const Attendance = () => {
     }
   
     try {
-      const res = await axios.post("http://localhost:5000/api/attendance/add", {
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/attendance/add`, {
         name,
         type: selectedMember.type,
         date,
@@ -108,7 +108,7 @@ const Attendance = () => {
     }
   
     try {
-      await axios.delete(`http://localhost:5000/api/attendance/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/attendance/${id}`);
       
       // ✅ Remove from UI instantly
       setRecords(records.filter((record) => record._id !== id));
@@ -129,7 +129,7 @@ const Attendance = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/members/add", newMember);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/members/add`, newMember);
       setMembers([...members, res.data]);
       setNewMember({ name: "", type: "" });
       alert("Member added successfully!");
@@ -149,7 +149,7 @@ const Attendance = () => {
       if (filterMonth) queryParams.month = filterMonth;
       if (filterYear) queryParams.year = filterYear;
   
-      const res = await axios.get("http://localhost:5000/api/attendance/filter", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/attendance/filter`, {
         params: queryParams,
       });
   
@@ -240,7 +240,7 @@ const Attendance = () => {
       }));
   
       // ✅ Send all absentees to the backend
-      await axios.post("http://localhost:5000/api/attendance/bulk-add", newAbsentees);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/attendance/bulk-add`, newAbsentees);
   
       // ✅ Update UI by adding absentees to the records list
       setRecords([...records, ...newAbsentees]);

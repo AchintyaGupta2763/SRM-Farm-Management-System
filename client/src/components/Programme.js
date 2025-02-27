@@ -23,7 +23,7 @@ const Programme = () => {
   // Fetch records based on date filters
   const fetchRecords = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/programme", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/programme`, {
         params: { startDate, endDate }
       });
       setRecords(res.data);
@@ -59,7 +59,7 @@ const Programme = () => {
         drclrW: Number(drclrW)
       };
 
-      const res = await axios.post("http://localhost:5000/api/programme/add", newRecord);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/programme/add`, newRecord);
       setRecords([res.data, ...records]);
 
       // Clear form fields
@@ -87,7 +87,7 @@ const Programme = () => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/programme/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/programme/${id}`);
       setRecords(records.filter((record) => record._id !== id));
     } catch (error) {
       console.error("Error deleting record", error);

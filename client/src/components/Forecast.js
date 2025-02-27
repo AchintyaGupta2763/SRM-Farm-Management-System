@@ -23,7 +23,7 @@ const Forecast = () => {
   // ✅ Fetch records based on date filters (sorted in descending order)
   const fetchRecords = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/forecast", { 
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/forecast`, { 
         params: { startDate, endDate } 
       });
       setRecords(res.data);
@@ -56,7 +56,7 @@ const Forecast = () => {
             total: Number(men) + Number(women),
             forecaster,
         };
-        const res = await axios.post("http://localhost:5000/api/forecast/add", newRecord);
+        const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/forecast/add`, newRecord);
         setRecords([res.data, ...records]); // Add new record at the top (descending order)
 
         // Clear the input fields after adding the record
@@ -74,7 +74,7 @@ const Forecast = () => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/forecast/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/forecast/${id}`);
       setRecords(records.filter((record) => record._id !== id));
     } catch (error) {
       console.error("❌ Error deleting record:", error);
@@ -85,7 +85,7 @@ const Forecast = () => {
     // ✅ Handle approving a record
     const handleApprove = async (id) => {
       try {
-        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/approve`);
+        const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/forecast/${id}/approve`);
         setRecords(records.map((record) => (record._id === id ? res.data : record)));
         alert("Record approved successfully!");
       } catch (error) {
@@ -97,7 +97,7 @@ const Forecast = () => {
     // ✅ Handle declining a record
     const handleDecline = async (id) => {
       try {
-        const res = await axios.put(`http://localhost:5000/api/forecast/${id}/decline`);
+        const res = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/forecast/${id}/decline`);
         setRecords(records.map((record) => (record._id === id ? res.data : record)));
         alert("Record declined successfully!");
       } catch (error) {

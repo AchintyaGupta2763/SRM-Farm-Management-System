@@ -22,7 +22,7 @@ const DailyMemorandum = () => {
   const fetchMemorandums = async () => {
     try {
       console.log(`📥 Fetching memorandums for date: ${date}`);
-      const res = await axios.get(`http://localhost:5000/api/daily-memorandum`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/daily-memorandum`, {
         params: { date },
       });
 
@@ -125,7 +125,7 @@ const DailyMemorandum = () => {
     console.log("📤 Submitting Memorandums:", memorandums);
 
     try {
-      await axios.post("http://localhost:5000/api/daily-memorandum/add", {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/daily-memorandum/add`, {
         date,
         memorandums,
       });
@@ -149,7 +149,7 @@ const DailyMemorandum = () => {
     console.log(`📥 Filtering memorandums from ${startDate} to ${endDate}`);
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/daily-memorandum/filter`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/daily-memorandum/filter`, {
         params: { startDate, endDate },
       });
 

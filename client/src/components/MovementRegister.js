@@ -18,7 +18,7 @@ const MovementRegister = () => {
   const fetchRecords = useCallback(async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/movement-register",
+        `${process.env.REACT_APP_API_BASE_URL}/api/movement-register`,
         {
           params: { startDate, endDate },
         }
@@ -45,7 +45,7 @@ const MovementRegister = () => {
       const newRecord = { date, name, purpose, place, outTime, inTime, sign };
 
       const res = await axios.post(
-        "http://localhost:5000/api/movement-register/add",
+        `${process.env.REACT_APP_API_BASE_URL}/api/movement-register/add`,
         newRecord
       );
       setRecords([res.data, ...records]);
@@ -71,7 +71,7 @@ const MovementRegister = () => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/movement-register/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/movement-register/${id}`);
       setRecords(records.filter((record) => record._id !== id));
     } catch (error) {
       console.error("Error deleting record", error);

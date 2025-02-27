@@ -18,7 +18,7 @@ const FarmProduces = () => {
   // ✅ Fetch records based on date filters (sorted in descending order)
   const fetchRecords = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/farm-produces", { 
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/farm-produces`, { 
         params: { startDate, endDate } 
       });
       setRecords(res.data);
@@ -50,7 +50,7 @@ const FarmProduces = () => {
         pageNo,
       };
 
-      const res = await axios.post("http://localhost:5000/api/farm-produces/add", newRecord);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/farm-produces/add`, newRecord);
       setRecords([res.data, ...records]); // Add new record at the top (descending order)
 
       // Clear the input fields after adding the record
@@ -66,7 +66,7 @@ const FarmProduces = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/farm-produces/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/farm-produces/${id}`);
       setRecords(records.filter(record => record._id !== id));
     } catch (error) {
       console.error("Error deleting record", error);

@@ -60,7 +60,7 @@ const Signup = () => {
         if (Object.keys(newErrors).length === 0) {
             setIsSubmitting(true);
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/signup', formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`, formData);
                 if (response.data.success) {
                     login(response.data.user, response.data.token);
                     navigate('/dashboard');

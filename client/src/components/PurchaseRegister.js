@@ -19,7 +19,7 @@ const PurchaseRegister = () => {
   // ✅ Fetch records based on date filters
   const fetchRecords = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/purchase-register", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/purchase-register`, {
         params: { startDate, endDate }
       });
       setRecords(res.data);
@@ -54,7 +54,7 @@ const PurchaseRegister = () => {
         building
       };
 
-      const res = await axios.post("http://localhost:5000/api/purchase-register/add", newRecord);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/purchase-register/add`, newRecord);
       setRecords([res.data, ...records]);
 
       // Clear form fields
@@ -80,7 +80,7 @@ const PurchaseRegister = () => {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/purchase-register/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/purchase-register/${id}`);
       setRecords(records.filter((record) => record._id !== id));
     } catch (error) {
       console.error("❌ Error deleting record", error);

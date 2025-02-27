@@ -17,7 +17,7 @@ const StockRegister = () => {
   // ✅ Fetch Stock Register Data
   const fetchRecords = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/stock-register", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/stock-register`, {
         params: { department: filterDepartment, startDate, endDate }
       });
       setRecords(res.data);
@@ -67,7 +67,7 @@ const StockRegister = () => {
 
     try {
       const newStockData = { department, folioNo, article, unit, stockEntries };
-      const res = await axios.post("http://localhost:5000/api/stock-register/add", newStockData);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/stock-register/add`, newStockData);
       setRecords([res.data, ...records]);
       
       // ✅ Clear Form After Submission

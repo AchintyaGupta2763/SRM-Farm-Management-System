@@ -27,7 +27,7 @@ const FarmToolsMovement = () => {
   const fetchEntries = async () => {
     try {
       console.log("📥 Fetching farm tools movement records...");
-      const res = await axios.get("http://localhost:5000/api/farm-tools");
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/farm-tools`);
       console.log("✅ Records received:", res.data);
       setEntries(res.data);
       setFilteredEntries(res.data); // Initialize filtered entries with all entries
@@ -47,7 +47,7 @@ const FarmToolsMovement = () => {
 
     try {
       console.log("📤 Sending new entry:", newEntry);
-      const res = await axios.post("http://localhost:5000/api/farm-tools/add", newEntry);
+      const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/farm-tools/add`, newEntry);
       console.log("✅ Entry added successfully:", res.data);
       setEntries([...entries, res.data]);
       setFilteredEntries([...filteredEntries, res.data]); // Add new entry to filtered list
@@ -73,7 +73,7 @@ const FarmToolsMovement = () => {
 
     try {
       console.log(`🗑 Deleting entry ID: ${id}`);
-      await axios.delete(`http://localhost:5000/api/farm-tools/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/farm-tools/${id}`);
       setEntries(entries.filter((entry) => entry._id !== id));
       setFilteredEntries(filteredEntries.filter((entry) => entry._id !== id)); // Remove from filtered list
       alert("✅ Entry deleted successfully.");
